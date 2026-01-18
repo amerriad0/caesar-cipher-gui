@@ -19,7 +19,8 @@ def caesar(text: str, shift: int, mode="encode") -> str:
     return result
 
 
-def vigenere(text, key, mode="encode"):
+def vigenere(text: str, key: str, mode: str = "encode") -> str:
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
     result = ""
     key = key.lower()
     key_index = 0
@@ -36,3 +37,4 @@ def vigenere(text, key, mode="encode"):
             result += char
 
     return result
+

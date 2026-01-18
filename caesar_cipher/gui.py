@@ -1,13 +1,30 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
-from caesar_cipher import caesar, vigenere
+from caesar_cipher.caesar import caesar, vigenere
+
 
 def process():
-    try:
-        shift = int(shift_entry.get())
-    except ValueError:
-        messagebox.showerror("Error", "Shift must be a number")
-        return
+    text = text_box.get("1.0", tk.END).strip().lower()
+    direction = mode.get()
+
+    if cipher_type.get() == "caesar":
+        try:
+            shift = int(shift_entry.get())
+        except ValueError:
+            messagebox.showerror("خطأ", "الرجاء إدخال رقم صحيح للإزاحة")
+            return
+        result = caesar(text, shift, direction)
+
+    else:
+        key = key_entry.get().strip()
+        if not key.isalpha():
+            messagebox.showerror("خطأ", "مفتاح Vigenère يجب أن يحتوي على حروف فقط")
+            return
+        result = vigenere(text, key, direction)
+
+    result_box.delete("1.0", tk.END)
+    result_box.insert(tk.END, result)
+
 
     text = text_box.get("1.0", tk.END).strip().lower()
     result = caesar(text, shift, mode.get())
@@ -48,11 +65,19 @@ text_box.grid(row=1, column=0, columnspan=4, pady=5)
 tk.Label(root, text="Shift").grid(row=2, column=0, sticky="w")
 shift_entry = tk.Entry(root, width=10)
 shift_entry.grid(row=2, column=1, sticky="w")
+tk.Label(root, text="Key (لـ Vigenère)").grid(row=2, column=5)
+key_entry = tk.Entry(root, width=10)
+key_entry.grid(row=3, column=5)
 
 # ===== Mode =====
 mode = tk.StringVar(value="encode")
 tk.Radiobutton(root, text="Encode", variable=mode, value="encode").grid(row=2, column=2)
 tk.Radiobutton(root, text="Decode", variable=mode, value="decode").grid(row=2, column=3)
+cipher_type = tk.StringVar(value="caesar")
+
+tk.Label(root, text="نوع التشفير").grid(row=2, column=4)
+tk.Radiobutton(root, text="Caesar", variable=cipher_type, value="caesar").grid(row=3, column=4)
+tk.Radiobutton(root, text="Vigenère", variable=cipher_type, value="vigenere").grid(row=4, column=4)
 
 # ===== Buttons =====
 tk.Button(root, text="Run", command=process).grid(row=3, column=0, pady=10)
