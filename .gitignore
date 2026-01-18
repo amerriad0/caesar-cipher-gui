@@ -1,0 +1,13 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Build artifacts
+build/
+dist/
+*.spec
+*.exe
+
+# IDE
+.idea/
